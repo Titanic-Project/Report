@@ -86,65 +86,69 @@
 
 \begin{document}
 \maketitle
-
 \begin{abstract}
 
 In this homework, we tried to calculate the survival probabilities of people in the titanic ship disaster by using the classification types we learned in the data mining course.
-We did some studies on our data by producing sub-problems ourselves.
-
-
-In short, we wanted to show how data mining reveals the results of a disaster.
+We did some studies on our data by producing sub-problems ourselves.In short, we wanted to show how data mining reveals the results of a disaster.
 
     
 \end{abstract}
-    
-\section{Contents }
-\begin{itemize}
-\color{blue!75!black}
-\item \hyperref[sec:1]{Data}
-\item \hyperref[sec:2]{Data Visualition}
-\item \hyperref[sec:2]{Feature Engineering}
-\item \hyperref[sec:2]{Cleaning Data}
-\item \hyperref[sec:2]{Modeling and Predictions}
-\end{itemize}
 
-
-
+\tableofcontents
 \section{Introduction}
 
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=10cm]{titanic.jpg}
+\end{figure}
 
 RMS (Royal Mail Ship) The sinking of the Titanic is one of the most painful shipwrecks in history. On April 15, 1912, on its maiden voyage, the Titanic crashed into an iceberg, and 2224 passengers and 1502 crew were killed. This tragic disaster shocked the international community and led to better safety regulations for ships. One of the reasons the accident caused such a loss of life was that there were not enough lifeboats for the passengers and crew. Some classes of people (such as women, children, and upper classes) were more likely to survive than others, although there were certain luck elements to survive. In this assignment, we tried to complete the analysis of what kind of people could survive in this struggle.
 
 \section{Data}
 
-Let's start by getting to know the datasets presented to us.
-We will use the training set (train.csv) to build our machine learning model. There are 12 columns in the train set and the names of the columns are as follows:\\
-Passengerid, Survived, Pclass, Name, Sex, Age, SibSp, Parch, Ticket, Fare, Cabin, Embarked\\
-We will use the test set (test.csv) to see how well our model performs on test data. We will try to predict survivors.
+\subsection{Test dataset}
+Let's start by getting to know the datasets presented to us.We will use the test set (test.csv) to see how well our model performs on test data. We will try to predict survivors.
 There are 11 columns in the test set and the names of the columns are as follows:
 Passengerid, Pclass, Name, Sex, Age, SibSp, Parch, Ticket, Fare, Cabin, Embarked
 
-The classes of the data we have;
+\subsection{Train dataset}
+
+We will use the training set (train.csv) to build our machine learning model. There are 12 columns in the train set and the names of the columns are as follows:\\
+Passengerid, Survived, Pclass, Name, Sex, Age, SibSp, Parch, Ticket, Fare, Cabin, Embarked\\
+
+\subsubsection{The classes of the data}
 \begin{itemize}
 
-\item \textbf{Survived:} survival (0 = No, 1 = Yes)
-\item \textbf{Pclass:} ticket class (1 = 1., 2 = 2., 3 = 3.)
-\item \textbf{Sex:} gender
-\item \textbf{Sibsp:} Number of siblings / spouses on the Titanic
-\item \textbf{Parch:} Number of parents / children on Titanic
-\item \textbf{Ticket}: ticket number
-\item \textbf{Mouse:} charge
-\item \textbf{Cabin:} cabin number
-\item \textbf{Embarked:} embarked port
+\textbf{Survived:} survival (0 = No, 1 = Yes)\\
+\textbf{Pclass:} ticket class (1 = 1., 2 = 2., 3 = 3.)\\
+\textbf{Sex:} gender\\
+\textbf{Sibsp:} Number of siblings / spouses on the Titanic\\
+\textbf{Parch:} Number of parents / children on Titanic\\
+\textbf{Ticket}: ticket number\\
+\textbf{Mouse:} charge\\
+\textbf{Cabin:} cabin number\\
+\textbf{Embarked:} embarked port\\
 \end{itemize}
 
-We have added the separate outputs of all the process  to our github address.\\
 * After opening the file in \textbf{Jupyter notebook}, we imported the necessary libraries for data analysis.
 
-* We define our test and training set with pandas library.
+\subsection{Define test and training sets with pandas library} 
 
-* After defining, we look at which columns we have in our data sets.
+\subsubsection{Test csv file }
 
+\begin{lstlisting}[language=Python, caption= test] 
+test_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\test.csv')   # for Fatma (r'C:\Users\Fatma\Desktop\new\test.csv')
+\end{lstlisting}
+ 
+\subsubsection{Train csv file} 
+ 
+\begin{lstlisting}[language=Python, caption= train] 
+train_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\train.csv')   #for Fatma (r'C:\Users\Fatma\Desktop\new\train.csv')
+\end{lstlisting}
+ 
+ * After defining, we look at which columns we have in our data sets.
+ 
 * We Printed Columns and Rows for Training and Testing.
 
 * We looked at the total number of passengers in the two data sets.
@@ -152,114 +156,62 @@ We have added the separate outputs of all the process  to our github address.\\
 * We looked at the survival rate.
 
 * We looked at the first 5 lines in the training set.
+\section{Data Visualition}
 
-* Looking at the distribution of passengers by gender: number of male passengers, 577; The number of female passengers is 314.\textbf{ Pandas' groupby ()} function is used to find these numbers.
+For this informations you can visit our all project from ;\\
+url{https://github.com/Titanic-Project.}
 
-* Two separate data frames (data frames) named "male-passenger" and "female-passenger" were created according to gender in order to be able to analyze male and female passengers separately for later use.
+\section{Feature Engineering}
 
-* Except for men and women, the kid-passenger data frame, which I accept as under 16 years old, has been created.
+\subsection{Age}
 
-* In order to determine adult male and adult female passengers, the child-passenger data frame was separated from male (male-passenger) and female (female-passenger) passenger data frames, and primarily male (male-kid-passenger) and female (female-kid-passenger) were determined separately.
+We do not want to delete all rows with missing age values, so we will replace the missing ones. As you can see, we have a sloping distribution according to age, and the median should be a good choice for substitution.\\
 
-* By using the pandas \textbf{.drop () function}, adult male (adult-male-passenger) and adult female (adult-female-passenger) data frames were created by separating male and female passenger data frames of male (male-kid-passenger) and female children (female-kid-passenger).
+One thesis was that the average age for passenger classes was different. Professional advancement often comes with increasing age and experience. Therefore, people with higher socio-economic status are on average older. If we break down by gender, we see that there is still a difference as women are generally younger. In a final step, I checked the number of cases to make sure there are still enough cases in each category. We will use these median values to replace the shortcomings.
 
-* The number of adult / child passengers was obtained by gender.
+\begin{lstlisting}[language=Python, caption=  age ] 
+#replace the missings values with the medians of each group
+df_all['Age']= df_all.groupby(['Pclass','Sex'])['Age'].apply(lambda x:x.fillna(x.median()))
+\end{lstlisting}
 
-* The distribution of passengers according to gender and the visualization of this distribution with a round diagram.
+\subsection{Fare}
+\begin{lstlisting}[language=Python, caption=  fare ] 
+df_all.loc[df_all['Fare'].isnull()]   
+\end{lstlisting}
+\\
 
-* Obtaining an alternative age distribution finding has been shown. By defining a new function, the distribution according to different age groups obtained with the \textbf{.apply () }application was obtained. According to the function defined, the 0-15 age range was named as 'Child' (child), the 16-24 age range as 'Young', over the age of 24 as 'Adult'. The number of passengers in these age ranges is obtained by using the \textbf{.value-counts () function}.
+We have one missing fee value in the entire data set. Mr. Thomas was in passenger class 3, traveled alone and flew to Southhampton. We will take other cases from people in this category and replace the missing Fee with the median of this group.
 
+\begin{lstlisting}[language=Python, caption=  loc cases which are similar to Mr.Thomas and use the median of fare to replace  the missing for his data set ] 
+mr_thomas=df_all.loc[(df_all['Pclass']==3)&(df_all['SibSp']==0)&(df_all['Embarked']=='S')]['Fare'].median()
+print(mr_thomas)
+\end{lstlisting}
+\subsection{Cabin}
 
-* The distribution of passengers according to different age ranges is shown. The data is visualized with a round diagram.
-
-With the .\textbf{mean () function}, the average age of adult male (adult-male-passenger), adult-female-passenger and child-passenger was obtained.
-
-* As a socio-economic indicator, the number of passengers according to passenger classes (Pclass) is obtained by the \textbf{.value-counts () function.}
-
-* The distribution of passenger numbers according to passenger classes has been visualized with a horizontal bar chart.
-
-* The missing two cells in the 'Embarked' column are filled with the highest value 'S' in the column.
-
-* The distribution of passengers according to their embarkation ports has been visualized with a bar graph.
-
-* Considering the survival / non-survival status, 549 of the 891 passengers in the data set died while 342 survived.
-
-* The number of passengers lost (0) - surviving (1) is shown with a bar graph.
-
-* The numbers of passengers who died (0) and survived (1) are shown, by gender.
-
-* The above image; As a result of applying \textbf{size () and unstack () function}s to two columns ('Sex', 'Survived')\textbf{ .groupby () function}, the survival ('Survived') variable is added to a better visual by adding "stacked = True" command on a single bar. has been transformed.
-
-* \textbf{Size () and unstack () functions} have been used to find the number of surviving / lost passengers according to passenger classes. First of all, the columns 'Pclass' and 'Survived' are grouped with .groupby ().
-
-* With size (), the numbers of deaths (0) and survivors (1) were obtained according to passenger classes.
+There are too many missing values, but we must use the cabin variable because it can be an important determinant. The cabins of the first class were on decks A, B or C, a mixture of these were on D or E and the third class was mainly on f or g. We can recognize the deck from the first letter.
 
 
-* The result obtained with unstack () has been converted to a more readable format.
+\begin{lstlisting}[language=Python, caption=  cabin missing values] 
+#keep all first letters of cabin in a new variable and use "M" for each missing
+df_all['Deck'] = df_all['Cabin'].apply(lambda s: s[0] if pd.notnull(s) else 'M' )
+\end{lstlisting}
+\subsection{Embarked}
 
-* The number of passengers who lost their lives (0) and survived (1) according to passenger classes are visualized.
+There are only two shortcomings to start with. As we have already tried for the wage case, we can look at similar situations to replace the missing value. It is logical that people who paid a similar amount, who also had a 1st class ticket and were on the same deck got on board from the same location.
 
-* Table of the number of male passengers who lost their lives and survived by passenger classes is shown.
-
-
-* Table of the number of women who lost their lives and survived by passenger classes is shown.
-
-
-* The numbers of male and female passengers who lost their lives / survived by passenger classes were visualized.
-
-* We have 11 different variables that can be used as properties to predict the outcome of our goal. At first glance, you can see that there are "Cabin" shortcomings. Deficiencies can disturb our algorithms, so clearing data is an important task.
-
-* We are missing the age, cabin and beginnings column in the training data. There are gaps in the age, fare and cabin column in the test data set. We will combine both data sets and perform data cleaning for the entire data set.
+\begin{lstlisting}[language=Python, caption=  embarked ] 
+df_all.loc[df_all['Embarked'].isnull(),'Embarked'] = 'S'
+\end{lstlisting}
 
 
-* We looked at missing data in our age column and we do not want to delete all rows with missing age values, so we will replace the missing data. As you can see in the image thrown into the githuba, we have a correct sloping distribution for age and the median should be a good choice for substitution.
+\subsection{Result}
 
-* After doing these procedures, we tried to solve it by throwing a thesis (we produced a sub-problem). It was that the average age for the passenger classes was different. Professional advancement often comes with increasing age and experience. Therefore, people with higher socio economic status are on average older. If we break down by gender, we see that there is still a difference as women are generally younger. In a final step, I checked the number of cases to make sure there are still enough cases in each category. We will use these median values ​​to replace the shortcomings.
-
-
-* We have one missing fee value in the entire data set. Mr. Thomas was in passenger class 3, traveled alone and flew to Southhampton. We took other cases from people in this category and replaced the missing Fee with the median of this group.
-
-* There are too many missing values, but we must use the cabin variable because it can be an important determinant. The cabins of the first class were on decks A, B or C, a mixture of them on D or E, and the third class was mainly on f or g. We can recognize the deck from the first letter.
-
-* There are significant differences in survival rates because guests on upper decks were faster on lifeboats. That's why we grouped some decks.
-
-* There are only two missing to start. As we have already tried for the wage case, we can look at similar situations to replace the missing value. It is logical that people who paid a similar amount, who also had a 1st class ticket and were on the same deck got on board from the same location. We also read on the Kaggle forum that you can google the travelers one by one, so we tried it.
-
-
-* As for linked articles, they both started at Southhampton. Data science is also about research!
-
-
-df-all.loc [df-all ['Embarked']. isnull (), 'Embarked'] = 'S' line: 277
-
-* We have filled in all missing values in our dataset and have not left a column yet. We used statistical methods for age and wage, created a new category for the cabin, and did some research for shipboard losses. Then we double checked if everything was fine.
-
-* Techniques we will use so far:
+We've filled in all missing values ​​in our dataset and haven't left a column yet. We used statistical methods for age and wage, created a new category for the cabin, and did some research for shipboard losses.\\
+\subsection{Techniques we will use so far:}
 Grouping continuous variables (ex: Age)
 - Create new attributes from existing variables (ex: Title)
 - Tag coding for non-numeric properties (ex: Gender)
 - A hot coding for categorical features (ex: Pclass)
-
-
-* As you can see, there are outliers for both age and wage. The range of values ​​is much higher for wage by age. We have split the distribution into parts so that outliers do not disturb our algorithm. We assigned the same number of cases to each category for the fee and created the categories for Age based on the values ​​of the variable. This is also the difference between cut and qcut. Dashed boxes are created based on the values ​​of the variable, regardless of how many cases are included in a category. With Qcut, we parsed a distribution into the same number of cases in each category.
-
-* On average, younger passengers and those with higher ticket prices have a higher chance of survival. Probably young people were rescued first, and people with higher ticket prices had access to lifeboats first.
-
-
-* There are two interesting variables in our dataset that tell us something about family size. SibSp defines how many siblings and spouses a passenger has and how many parents and children parch. We can summarize these variables and add 1 to get the family size (for each passerby).
-
-* One thesis (we dealt with the sub-issue further) is that families have a higher chance of survival than singles because they are better able to support themselves and are primarily saved. However, if families are very large, coordination will probably be very difficult in an exceptional situation.
-
-* We expect a correlation between ticket frequencies and survival rates because the same ticket numbers are an indication that people are traveling together.
-
-* The name gives us very important information about the socioeconomic status of a traveler. We can answer the question of whether someone is married or has an official title that may indicate a higher social status.
-
-* There are many different titles in our dataset. We only considered the title with more than 10 cases, assigning all others to the "misc" category.
-
-* We determined the passengers' surnames. We can then see if there are any family members both in education and in the test data set.
-
-* People and women with a master's degree survived significantly more often and also have larger families on average. We assume that if a master or woman is marked as a survivor in the training dataset, the family members in the test dataset will also survive.
-
-* In order to classify the \textbf{DecisionTreeClassifier}, we clean our Name, Cabin and Ticket columns by using the \textbf{dropna method} since the machine does not need to learn.
 
 * After this process, we obtain information about the data using the .info () method.
 \begin{lstlisting}[language=Python, caption= get-dummies] 
@@ -270,10 +222,25 @@ for columns in columns:
     \end{lstlisting}
 
 Thanks to the code above, we have completed separate transformations of our attributes named Pclass, Sex and Embarked in a list called passengers. As a result of the transformation, the attributes started to consist of column headings of the categorical classes they contained. To give an example, if the x row has the property of the y column, the matching cell value becomes 1, the others have the value 0.
+\section{Data Cleaning}
+
+\subsection{Check missing columns}
+
+* we should examine the missing columns to clean it.
+
+\begin{lstlisting}[language=Python, caption= missing columns] 
+print("Missings in the train data: ")
+display(train_dataset.isnull().sum())
+
+print("Missings in the test data: ") 
+display(test_dataset.isnull().sum())
+\end{lstlisting}
+
+\subsection{Clean gender}
 
 * We used the concat method, which is a method of Pandas library, to obtain a single DataFrame. After using the method, we printed our variable on the console in order to view the result. The axis we mentioned here means "from the xth index value".
 
-\begin{lstlisting}[language=Python, caption= concat] 
+\begin{lstlisting}[language=Python, caption= concat passengers] 
 passengers = pd.concat (passengers, axis = 1)
 \end{lstlisting}
 
@@ -284,9 +251,11 @@ passengers = pd.concat (passengers, axis = 1)
 passengers = passengers.drop (['male'], axis = 1)
 \end{lstlisting}
 
+\subsection{Drop the useless and missing columns}
+
 * After this process, we were able to combine the attributes that we converted with the attributes that we did not transform. However, since there is also a variable named train-dataset that we will use in this merging process, we will extract the attribute from which we transform. Again, I will use the\textbf{ concat and drop methods} again for these operations.
 
-\begin{lstlisting}[language=Python, caption= concat] 
+\begin{lstlisting}[language=Python, caption= drop the useless and missing columns] 
 train-dataset = pd.concat ((train-dataset, passengers), axis = 1)
 
 train-dataset = train-dataset.drop (('Pclass', 'Sex', 'Embarked'), axis = 1)
@@ -305,9 +274,26 @@ X = np.delete (X, 1, axis = 1)
 
 
 test size is 30 percent and train size 70 percent
+\section{Modeling and Predictions}
 
-\begin{lstlisting}[language=Python, caption= modeling] 
-X-train, X-test, y-train, y-test=train-test-split(X,Y,test-size=0.3, random-state=0) 
+\subsection{Classifiers}
+
+\subsubsection{Train and test }
+
+Now we will get our own Survived predictions using the training data set. Then we will get a truth table score by comparing it with the actual Survived values.
+
+\begin{lstlisting}[language=Python, caption= train and test] 
+X = train_dataset.values
+Y = train_dataset['Survived'].values
+
+X = np.delete(X,1,axis=1)
+
+X_train, X_test, y_train, y_test=train_test_split(X,Y,test_size=0.3, random_state=0) #test size 30 atadÄ±k train test de 70 oldu
+\end{lstlisting}
+
+\subsubsection{DecisionTreeClassifier}
+
+\begin{lstlisting}[language=Python, caption= DecisionTreeClassifier ] 
 siniflama = tree.DecisionTreeClassifier(max-depth=5)
 siniflama.fit(X-train,y-train)
 skor = siniflama.score(X-test,y-test)
@@ -325,11 +311,18 @@ For this, we used the \textbf{crosstab () method} from the pandas library.
 
 \begin{lstlisting}[language=Python, caption= modeling] 
 confusion-matrix = pd.crosstab(Y, tahminler, rownames=['Gerçek'], colnames=['Tahmin'])
-
-
 print (confusion-matrix)
-
 \end{lstlisting}
 
+\subsubsection{RandomForestClassifier}
+
+\begin{lstlisting}[language=Python, caption=  RandomForestClassifier ] 
+model = RandomForestClassifier(criterion = 'gini',n_estimators=1750,max_depth=7,min_samples_split =6, min_samples_leaf = 6, max_features = 'auto', oob_score= True, random_state=42, n_jobs=-1,verbose =1)
+            
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)  
+
+score = model.score(X_test, y_test)
+\end{lstlisting}
 
 \end{document}
