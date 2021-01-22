@@ -325,4 +325,19 @@ predictions = model.predict(X_test)
 score = model.score(X_test, y_test)
 \end{lstlisting}
 
+
+
+\section{Result and Conclusion}
+We tried to explain step by step the operations we made in our dataset. In order to explain it better, we put the individual outputs of each line on the githuba.
+We used two classification methods.
+Using the DecisionTreeClassifier (tree.DecisionTreeClassifier) ​​classification, we calculated the survival rate at 84 percent.
+Using the RandomForestClassifier classification, we calculated the survival rate at 81 percent.
+Having this rate in some of the articles we read made us conclude that the methods we use are correct, because it is a good rate.
+In our dataset, we thought about some sub-problems and made the operations. For example: characteristics such as age, gender, embarked, education level, ticket, etc., we examined them as well.
+And when we saw the results we got, we realized that survival rate could be correlated with them.
+For example, some results we got:
+The proportion of adult female and adult male travelers who survived was examined. According to this, 75 percent of adult female passengers survived, while 84 percent of adult male passengers lost their lives.
+Persons and women with master's degrees survived significantly more often and also have larger families on average. 
+To sum up, it was fun to categorize the data and use two different classification methods.
+
 \end{document}
